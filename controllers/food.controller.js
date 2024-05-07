@@ -25,7 +25,7 @@ exports.findFood = async (request, response) => {
         let foods = await foodModel.findAll({
             where: {
                 [Op.or]: [
-                    { foodID: { [Op.substring]: keyword } },
+                    { makananID: { [Op.substring]: keyword } },
                     { name: { [Op.substring]: keyword } },
                     { spicy_level: { [Op.substring]: keyword } },
                     { price: { [Op.substring]: keyword } }
@@ -85,7 +85,7 @@ exports.updateFood = async (request, response) => {
             return response.json({ message: error });
         }
 
-        let foodID = request.params.id;
+        let makananID = request.params.id;
         let dataFood = {
             name: request.body.name,
             spicy_level: request.body.spicy_level,
@@ -94,7 +94,7 @@ exports.updateFood = async (request, response) => {
 
         if (request.file) {
             const selectedFood = await foodModel.findOne({
-                where: { foodID: foodID }
+                where: { makananID: makananID }
             });
 
             if (!selectedFood) {
@@ -113,7 +113,7 @@ exports.updateFood = async (request, response) => {
         }
 
         try {
-            await foodModel.update(dataFood, { where: { foodID: foodID } });
+            await foodModel.update(dataFood, { where: { makananID: makananID } });
             return response.json({
                 success: true,
                 message: "Food has updated"
@@ -129,8 +129,8 @@ exports.updateFood = async (request, response) => {
 
 exports.deleteFood = async (request, response) => {
     try {
-        const foodID = request.params.id;
-        const food = await foodModel.findOne({ where: { foodID: foodID } });
+        const makananID = request.params.id;
+        const food = await foodModel.findOne({ where: { makananID: makananID } });
         const oldImage = food.image;
         const pathImage = path.join(__dirname, "../image", oldImage);
 
@@ -138,7 +138,7 @@ exports.deleteFood = async (request, response) => {
             fs.unlink(pathImage, error => console.log(error));
         }
 
-        await foodModel.destroy({ where: { foodID: foodID } });
+        await foodModel.destroy({ where: { makananID: makananID } });
 
         return response.json({
             success: true,

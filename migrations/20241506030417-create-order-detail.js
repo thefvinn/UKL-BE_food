@@ -17,13 +17,9 @@ module.exports = {
         },
         allowNull: false
       },
-      foodID: {
+      food_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "food",
-          key: "foodID"
-        },
-        allowNull: false
+        allowNull: false,
       },
       quantity: {
         type: Sequelize.INTEGER

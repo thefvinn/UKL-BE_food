@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   food.init({
-    foodID: {
+    makananID: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,

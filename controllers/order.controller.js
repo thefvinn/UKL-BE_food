@@ -14,17 +14,18 @@ exports.addOrder = async (request, response) => {
       order_date: today.toString(),
     };
 
+    // console.log(dataOrderList);
     const newOrderList = await listModel.create(dataOrderList);
 
     const banyakFood = request.body.banyakFood;
     /*
         [
             {
-                foodID: 1,
+                makananID: 1,
                 kuantitas: 2
             },
             {
-                foodID: 2,
+                makananID: 2,
                 kuantitas: 3
             }
         ]
@@ -32,7 +33,7 @@ exports.addOrder = async (request, response) => {
 
     for (let index = 0; index < banyakFood.length; index++) {
       const foodData = await foodModel.findOne({
-        where: { foodID: banyakFood[index].foodID },
+        where: { makananID: banyakFood[index].makananID },
       });
       // console.log(foodData);
       if (!foodData) {
@@ -43,7 +44,7 @@ exports.addOrder = async (request, response) => {
       }
       let newDetail = {
         order_id: newOrderList.listID,
-        food_id: foodData.foodID,
+        food_id: foodData.makananID,
         quantity: banyakFood[index].quantity,
         harga: foodData.price * banyakFood[index].quantity,
       };
@@ -68,8 +69,8 @@ exports.showHistory = async (request, response) => {
     const jumlahData = await listModel.findAll();
     let a = [];
     for (let index = 1; index <= jumlahData.length; index++) {
-      let coba = await listModel.findOne({ where: { orderListID: index } });
-      let coba2 = await detailModel.findAll({ where: { orderListID: index } });
+      let coba = await listModel.findOne({ where: { listID: index } });
+      let coba2 = await detailModel.findAll({ where: { order_id: index } });
       a.push(coba);
       a.push(coba2);
     }
