@@ -2,6 +2,8 @@ const foodModel = require('../models/index').food;
 const Op = require('sequelize').Op;
 const path = require('path');
 const fs = require('fs');
+const { where } = require('sequelize');
+const listModel = require ("../models/index").order_list;
 
 exports.getAllFood = async (request, response) => {
     try {
@@ -22,16 +24,7 @@ exports.getAllFood = async (request, response) => {
 exports.findFood = async (request, response) => {
     try {
         let keyword = request.params.key;
-        let foods = await foodModel.findAll({
-            where: {
-                [Op.or]: [
-                    { makananID: { [Op.substring]: keyword } },
-                    { name: { [Op.substring]: keyword } },
-                    { spicy_level: { [Op.substring]: keyword } },
-                    { price: { [Op.substring]: keyword } }
-                ]
-            }
-        });
+        let foods = await listModel.findAll({where: {table_number: keyword}});
         return response.json({
             success: true,
             data: foods,

@@ -6,12 +6,14 @@ const Op = require(`sequelize`).Op;
 
 exports.addOrder = async (request, response) => {
   try {
-    const today = new Date();
+    let a = request.body.order_date
+    // const today = new Date(a);
+    // const finalhari = today.toDateString
 
     const dataOrderList = {
       customer_name: request.body.customer_name,
       table_number: request.body.table_number,
-      order_date: today.toString(),
+      order_date: a,
     };
 
     // console.log(dataOrderList);
@@ -66,18 +68,19 @@ exports.addOrder = async (request, response) => {
 
 exports.showHistory = async (request, response) => {
   try {
-    const jumlahData = await listModel.findAll();
-    let a = [];
-    for (let index = 1; index <= jumlahData.length; index++) {
-      let coba = await listModel.findOne({ where: { listID: index } });
-      let coba2 = await detailModel.findAll({ where: { order_id: index } });
-      a.push(coba);
-      a.push(coba2);
-    }
+    const jumlahData = await listModel.findAll({
+      include: [
+        {
+          model: detailModel,
+          as: "orderDetail",
+        },
+      ],
+    });
+
 
     return response.json({
       success: true,
-      data: a,
+      data: jumlahData,
     });
   } catch (error) {
     return response.json({
